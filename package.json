@@ -1,0 +1,39 @@
+{
+  "name": "@candy-swap/candy-sdk",
+  "version": "1.0.0",
+  "description": "Candy SDK for Solana",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "solana",
+    "blockchain",
+    "candy",
+    "sdk"
+  ],
+  "author": "meyozeqi38",
+  "license": "MIT",
+  "dependencies": {
+    "@coral-xyz/anchor": "0.29.0",
+    "@raydium-io/raydium-sdk-v2": "0.1.64-alpha",
+    "@solana/spl-token": "^0.3.11",
+    "@solana/web3.js": "^1.95.1",
+    "bn.js": "^5.2.1",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.6",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "@coral-xyz/anchor": ">=0.28.0",
+    "@solana/web3.js": ">=1.87.0"
+  }
+}
