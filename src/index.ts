@@ -63,7 +63,8 @@ export class CandySDK {
         uri: string,
         decimals: number,
         creator: PublicKey,
-        mintPk: PublicKey
+        mintPk: PublicKey,
+        swapFee: number = 0
     ): Promise<{
         instructions: Array<TransactionInstruction>;
         mint: PublicKey;
@@ -103,7 +104,7 @@ export class CandySDK {
         );
 
         const tx = new web3.Transaction();
-        tx.add(await this.program.methods.initialize()
+        tx.add(await this.program.methods.initialize(new BN(swapFee))
             .accounts({
                 admin: creator,
                 systemProgram: web3.SystemProgram.programId,
@@ -191,6 +192,7 @@ export class CandySDK {
             this.program.programId
         );
 
+        const dexConfiguration = await this.program.account.curveConfiguration.fetch(dexConfigurationAccount);
         const instructions: TransactionInstruction[] = [];
 
         const swapInstruction = await this.program.methods
@@ -202,12 +204,12 @@ export class CandySDK {
                 mintTokenOne: mint,
                 poolTokenAccountOne: poolTokenAccount,
                 userTokenAccountOne: userTokenAccount,
-                cashier,
                 user,
                 rent: SYSVAR_RENT_PUBKEY,
                 systemProgram: SystemProgram.programId,
                 tokenProgram: TOKEN_PROGRAM_ID,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+                admin: dexConfiguration.admin,
             })
             .instruction();
 

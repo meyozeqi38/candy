@@ -89,20 +89,12 @@ export type Candy = {
           "isSigner": false
         },
         {
-          "name": "pool",
+          "name": "mintTokenOne",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "liquidityAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "mintTokenOne",
+          "name": "pool",
           "isMut": true,
           "isSigner": false
         },
@@ -117,7 +109,7 @@ export type Candy = {
           "isSigner": false
         },
         {
-          "name": "cashier",
+          "name": "admin",
           "isMut": true,
           "isSigner": false
         },
@@ -127,7 +119,12 @@ export type Candy = {
           "isSigner": true
         },
         {
-          "name": "rent",
+          "name": "liquidityAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -137,7 +134,7 @@ export type Candy = {
           "isSigner": false
         },
         {
-          "name": "tokenProgram",
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         },
@@ -196,7 +193,12 @@ export type Candy = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "fee",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "ammPrepare",
@@ -346,6 +348,10 @@ export type Candy = {
           {
             "name": "fees",
             "type": "f64"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
           }
         ]
       }
@@ -610,6 +616,11 @@ export type Candy = {
       "code": 6011,
       "name": "PriceUnavailable",
       "msg": "Price from Pyth Network is unavailable"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidAdmin",
+      "msg": "Invalid admin account"
     }
   ]
 };
@@ -705,20 +716,12 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
-          "name": "pool",
+          "name": "mintTokenOne",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "liquidityAccount",
-          "isMut": true,
-          "isSigner": false,
-          "docs": [
-            "CHECK"
-          ]
-        },
-        {
-          "name": "mintTokenOne",
+          "name": "pool",
           "isMut": true,
           "isSigner": false
         },
@@ -733,7 +736,7 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
-          "name": "cashier",
+          "name": "admin",
           "isMut": true,
           "isSigner": false
         },
@@ -743,7 +746,12 @@ export const IDL: Candy = {
           "isSigner": true
         },
         {
-          "name": "rent",
+          "name": "liquidityAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -753,7 +761,7 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
-          "name": "tokenProgram",
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         },
@@ -812,7 +820,12 @@ export const IDL: Candy = {
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "fee",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "ammPrepare",
@@ -962,6 +975,10 @@ export const IDL: Candy = {
           {
             "name": "fees",
             "type": "f64"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
           }
         ]
       }
@@ -1226,6 +1243,11 @@ export const IDL: Candy = {
       "code": 6011,
       "name": "PriceUnavailable",
       "msg": "Price from Pyth Network is unavailable"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidAdmin",
+      "msg": "Invalid admin account"
     }
   ]
 };
