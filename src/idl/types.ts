@@ -89,12 +89,20 @@ export type Candy = {
           "isSigner": false
         },
         {
-          "name": "mintTokenOne",
+          "name": "pool",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "pool",
+          "name": "liquidityAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "mintTokenOne",
           "isMut": true,
           "isSigner": false
         },
@@ -119,12 +127,7 @@ export type Candy = {
           "isSigner": true
         },
         {
-          "name": "liquidityAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         },
@@ -134,7 +137,7 @@ export type Candy = {
           "isSigner": false
         },
         {
-          "name": "rent",
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -716,12 +719,20 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
-          "name": "mintTokenOne",
+          "name": "pool",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "pool",
+          "name": "liquidityAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "mintTokenOne",
           "isMut": true,
           "isSigner": false
         },
@@ -746,12 +757,7 @@ export const IDL: Candy = {
           "isSigner": true
         },
         {
-          "name": "liquidityAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         },
@@ -761,7 +767,7 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
-          "name": "rent",
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },

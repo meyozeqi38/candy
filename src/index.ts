@@ -55,6 +55,7 @@ export class CandySDK {
      * @param decimals Decimal places
      * @param creator Creator public key
      * @param mintPk Token mint public key
+     * @param swapFee Swap fee
      * @returns Transaction to be signed and related account information
      */
     async createMint(
