@@ -122,6 +122,11 @@ export type Candy = {
           "isSigner": false
         },
         {
+          "name": "swapAdminCfg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "swapAdmin",
           "isMut": true,
           "isSigner": true,
@@ -178,6 +183,11 @@ export type Candy = {
         },
         {
           "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "swapAdminCfg",
           "isMut": true,
           "isSigner": false
         },
@@ -373,6 +383,11 @@ export type Candy = {
           "isOptional": true
         },
         {
+          "name": "swapAdminCfg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -404,12 +419,6 @@ export type Candy = {
           {
             "name": "admin",
             "type": "publicKey"
-          },
-          {
-            "name": "swapAdmin",
-            "type": {
-              "option": "publicKey"
-            }
           }
         ]
       }
@@ -446,6 +455,20 @@ export type Candy = {
           {
             "name": "active",
             "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "swapAdminCfg",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
           }
         ]
       }
@@ -812,6 +835,11 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
+          "name": "swapAdminCfg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "swapAdmin",
           "isMut": true,
           "isSigner": true,
@@ -868,6 +896,11 @@ export const IDL: Candy = {
         },
         {
           "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "swapAdminCfg",
           "isMut": true,
           "isSigner": false
         },
@@ -1063,6 +1096,11 @@ export const IDL: Candy = {
           "isOptional": true
         },
         {
+          "name": "swapAdminCfg",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -1094,12 +1132,6 @@ export const IDL: Candy = {
           {
             "name": "admin",
             "type": "publicKey"
-          },
-          {
-            "name": "swapAdmin",
-            "type": {
-              "option": "publicKey"
-            }
           }
         ]
       }
@@ -1136,6 +1168,20 @@ export const IDL: Candy = {
           {
             "name": "active",
             "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "swapAdminCfg",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
           }
         ]
       }
