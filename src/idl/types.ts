@@ -160,16 +160,10 @@ export type Candy = {
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
-        },
-        {
-          "name": "style",
-          "type": "u64"
-        },
-        {
-          "name": "minOut",
-          "type": "u64"
+          "name": "params",
+          "type": {
+            "defined": "SwapParams"
+          }
         }
       ]
     },
@@ -495,6 +489,26 @@ export type Candy = {
           {
             "name": "decimals",
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "style",
+            "type": "u64"
+          },
+          {
+            "name": "minOut",
+            "type": "u64"
           }
         ]
       }
@@ -873,16 +887,10 @@ export const IDL: Candy = {
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
-        },
-        {
-          "name": "style",
-          "type": "u64"
-        },
-        {
-          "name": "minOut",
-          "type": "u64"
+          "name": "params",
+          "type": {
+            "defined": "SwapParams"
+          }
         }
       ]
     },
@@ -1208,6 +1216,26 @@ export const IDL: Candy = {
           {
             "name": "decimals",
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SwapParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "style",
+            "type": "u64"
+          },
+          {
+            "name": "minOut",
+            "type": "u64"
           }
         ]
       }

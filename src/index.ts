@@ -21,6 +21,12 @@ export interface InitTokenParams {
     decimals: number;
 }
 
+export interface SwapParams {
+    amount: BN;
+    style: BN;
+    minOut: BN;
+}
+
 export * from "./utils";
 
 const SWAP_THRESHOLD = 30_000_000_000; // 30 SOL in lamports
@@ -178,10 +184,8 @@ export class CandySDK {
      */
     async swap(
         mint: PublicKey,
-        amount: anchor.BN,
+        params: SwapParams,
         user: PublicKey,
-        style: anchor.BN,
-        minOut: anchor.BN = new BN(0),
         swapAdmin?: PublicKey
     ): Promise<{
         instructions: Array<TransactionInstruction>;
@@ -210,7 +214,7 @@ export class CandySDK {
         const instructions: TransactionInstruction[] = [];
 
         const swapInstruction = await this.program.methods
-            .swap(amount, style, minOut)
+            .swap(params)
             .accounts({
                 dexConfigurationAccount,
                 pool,
