@@ -122,6 +122,12 @@ export type Candy = {
           "isSigner": false
         },
         {
+          "name": "swapAdmin",
+          "isMut": true,
+          "isSigner": true,
+          "isOptional": true
+        },
+        {
           "name": "user",
           "isMut": true,
           "isSigner": true
@@ -179,6 +185,12 @@ export type Candy = {
           "name": "admin",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "swapAdmin",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
         },
         {
           "name": "systemProgram",
@@ -340,6 +352,43 @@ export type Candy = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "setSwapAdmin",
+      "accounts": [
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "swapAdmin",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "swapAdmin",
+          "type": "publicKey"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -355,6 +404,12 @@ export type Candy = {
           {
             "name": "admin",
             "type": "publicKey"
+          },
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
           }
         ]
       }
@@ -624,6 +679,11 @@ export type Candy = {
       "code": 6012,
       "name": "InvalidAdmin",
       "msg": "Invalid admin account"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidSwapAdmin",
+      "msg": "Invalid swap admin account"
     }
   ]
 };
@@ -752,6 +812,12 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
+          "name": "swapAdmin",
+          "isMut": true,
+          "isSigner": true,
+          "isOptional": true
+        },
+        {
           "name": "user",
           "isMut": true,
           "isSigner": true
@@ -809,6 +875,12 @@ export const IDL: Candy = {
           "name": "admin",
           "isMut": true,
           "isSigner": true
+        },
+        {
+          "name": "swapAdmin",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
         },
         {
           "name": "systemProgram",
@@ -970,6 +1042,43 @@ export const IDL: Candy = {
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "setSwapAdmin",
+      "accounts": [
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "swapAdmin",
+          "isMut": true,
+          "isSigner": false,
+          "isOptional": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "swapAdmin",
+          "type": "publicKey"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -985,6 +1094,12 @@ export const IDL: Candy = {
           {
             "name": "admin",
             "type": "publicKey"
+          },
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
           }
         ]
       }
@@ -1254,6 +1369,11 @@ export const IDL: Candy = {
       "code": 6012,
       "name": "InvalidAdmin",
       "msg": "Invalid admin account"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidSwapAdmin",
+      "msg": "Invalid swap admin account"
     }
   ]
 };

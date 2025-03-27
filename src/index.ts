@@ -56,6 +56,7 @@ export class CandySDK {
      * @param creator Creator public key
      * @param mintPk Token mint public key
      * @param swapFee Swap fee
+     * @param swapAdmin Swap admin public key
      * @returns Transaction to be signed and related account information
      */
     async createMint(
@@ -65,6 +66,7 @@ export class CandySDK {
         decimals: number,
         creator: PublicKey,
         mintPk: PublicKey,
+        swapAdmin?: PublicKey,
         swapFee: number = 0
     ): Promise<{
         instructions: Array<TransactionInstruction>;
@@ -113,6 +115,7 @@ export class CandySDK {
                 mint: mintPk,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 dexConfigurationAccount: dexCfgAccount,
+                swapAdmin: swapAdmin,
             }).instruction()
         );
 
@@ -172,7 +175,8 @@ export class CandySDK {
         amount: anchor.BN,
         user: PublicKey,
         style: anchor.BN,
-        minOut: anchor.BN = new BN(0)
+        minOut: anchor.BN = new BN(0),
+        swapAdmin?: PublicKey
     ): Promise<{
         instructions: Array<TransactionInstruction>;
         userTokenAccount: PublicKey;
@@ -211,6 +215,7 @@ export class CandySDK {
                 tokenProgram: TOKEN_PROGRAM_ID,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
                 admin: dexConfiguration.admin,
+                swapAdmin: swapAdmin,
             })
             .instruction();
 
@@ -221,6 +226,22 @@ export class CandySDK {
             userTokenAccount,
             poolTokenAccount,
         };
+    }
+
+    async setSwapAdmin(mint: PublicKey, swapAdmin: PublicKey) {
+        const [dexCfgAccount] = PublicKey.findProgramAddressSync(
+            [Buffer.from("CurveConfiguration")],
+            this.program.programId
+        );
+
+        const setSwapAdminIx = await this.program.methods.setSwapAdmin(swapAdmin).accounts({
+            dexConfigurationAccount: dexCfgAccount,
+            admin: this.provider.publicKey,
+            systemProgram: web3.SystemProgram.programId,
+            swapAdmin: swapAdmin,
+        }).instruction();
+
+        return setSwapAdminIx;
     }
 
     /**
