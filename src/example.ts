@@ -65,9 +65,12 @@ async function main() {
         const amount = new BN(1_000_000_000); // 1 SOL
         const { instructions: swapTx } = await sdk.swap(
             mint,
-            amount,
+            {
+                amount,
+                style: new BN(0), // Buy direction
+                minOut: new BN(0)
+            },
             keypair.publicKey,
-            new BN(0) // Buy direction
         );
         // Add priority fee instructions
         swapTx.push(
