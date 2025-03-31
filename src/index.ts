@@ -27,6 +27,13 @@ export interface SwapParams {
     minOut: BN;
 }
 
+export interface Cfg {
+    swapFee: BN;
+    swapAdmin: PublicKey;
+    devFeeReceiver: PublicKey;
+    mint: PublicKey;
+}
+
 export * from "./utils";
 
 const SWAP_THRESHOLD = 30_000_000_000; // 30 SOL in lamports
@@ -72,15 +79,8 @@ export class CandySDK {
         decimals: number,
         creator: PublicKey,
         mintPk: PublicKey,
-        swapAdmin?: PublicKey,
-        swapFee: number = 0
-    ): Promise<{
-        instructions: Array<TransactionInstruction>;
-        mint: PublicKey;
-        pool: PublicKey;
-        tokenAccount: PublicKey;
-        liquidityAta: PublicKey;
-    }> {
+        devFeeReciever?: PublicKey,
+    ) {
         const [pool] = web3.PublicKey.findProgramAddressSync(
             [Buffer.from("liquidity_pool"), mintPk.toBuffer()],
             this.program.programId
@@ -100,11 +100,6 @@ export class CandySDK {
             this.program.programId
         );
 
-        const [swapAdminCfg] = web3.PublicKey.findProgramAddressSync(
-            [Buffer.from("SwapAdmin"), mintPk.toBuffer()],
-            this.program.programId
-        );
-
         const token_account = await getAssociatedTokenAddress(
             mintPk,
             liquidityAccount,
@@ -117,17 +112,22 @@ export class CandySDK {
             tokenMetadataProgram
         );
 
+        const [cfg] = web3.PublicKey.findProgramAddressSync(
+            [Buffer.from("TokenCfg"), mintPk.toBuffer() ],
+            this.program.programId
+        );
+
         const tx = new web3.Transaction();
-        tx.add(await this.program.methods.initialize(new BN(swapFee))
+        tx.add(await this.program.methods.mintInitialize()
             .accounts({
+                mint: mintPk,
+                dexConfigurationAccount: dexCfgAccount,
+                cfg: cfg,
                 admin: creator,
                 systemProgram: web3.SystemProgram.programId,
                 tokenProgram: TOKEN_PROGRAM_ID,
-                mint: mintPk,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                dexConfigurationAccount: dexCfgAccount,
-                swapAdmin: swapAdmin,
-                swapAdminCfg: swapAdminCfg,
+                devFeeReciever: devFeeReciever ?? null,
             }).instruction()
         );
 
@@ -160,6 +160,7 @@ export class CandySDK {
                 cashier: cashier,
                 liquidityAccount: liquidityAccount,
                 pool: pool,
+                dexConfigurationAccount: dexCfgAccount,
             }).instruction();
 
         tx.add(createIx);
@@ -170,6 +171,8 @@ export class CandySDK {
             instructions: tx.instructions,
             mint: mintPk,
             tokenAccount: token_account,
+            dexConfigurationAccount: dexCfgAccount,
+            cfg: cfg,
         };
     }
 
@@ -186,7 +189,8 @@ export class CandySDK {
         mint: PublicKey,
         params: SwapParams,
         user: PublicKey,
-        swapAdmin?: PublicKey
+        swapAdmin?: PublicKey,
+        devFeeReceiver?: PublicKey,
     ): Promise<{
         instructions: Array<TransactionInstruction>;
         userTokenAccount: PublicKey;
@@ -209,6 +213,10 @@ export class CandySDK {
             [Buffer.from("SwapAdmin"), mint.toBuffer()],
             this.program.programId
         );
+        const [cfg] = web3.PublicKey.findProgramAddressSync(
+            [Buffer.from("TokenCfg"), mint.toBuffer() ],
+            this.program.programId
+        );
 
         const dexConfiguration = await this.program.account.curveConfiguration.fetch(dexConfigurationAccount);
         const instructions: TransactionInstruction[] = [];
@@ -218,6 +226,7 @@ export class CandySDK {
             .accounts({
                 dexConfigurationAccount,
                 pool,
+                cfg: cfg,
                 liquidityAccount: liquidityAccount,
                 mintTokenOne: mint,
                 poolTokenAccountOne: poolTokenAccount,
@@ -227,9 +236,9 @@ export class CandySDK {
                 systemProgram: SystemProgram.programId,
                 tokenProgram: TOKEN_PROGRAM_ID,
                 associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-                admin: dexConfiguration.admin,
                 swapAdmin: swapAdmin,
-                swapAdminCfg: swapAdminCfg,
+                devFeeReceiver: devFeeReceiver ?? null,
+                sysFeeReceiver: dexConfiguration.sysFeeReceiver,
             })
             .instruction();
 
@@ -242,26 +251,103 @@ export class CandySDK {
         };
     }
 
-    async setSwapAdmin(mint: PublicKey, swapAdmin: PublicKey) {
-        const [dexCfgAccount] = PublicKey.findProgramAddressSync(
+    /**
+     * Set active status
+     * @param mint Token mint address
+     * @param active Active status
+     * @returns Transaction to be signed and related account information
+     */
+    async setActive(mint: PublicKey, active: boolean) {
+        const [dexCfgAccount] = web3.PublicKey.findProgramAddressSync(
+            [Buffer.from("CurveConfiguration")],
+            this.program.programId
+        );
+    
+        const [pool] = web3.PublicKey.findProgramAddressSync(
+            [Buffer.from("liquidity_pool"), mint.toBuffer()],
+            this.program.programId
+        );
+
+        const tx = new web3.Transaction();
+        tx.add(await this.program.methods.setActive({ active }).accounts({
+            dexConfigurationAccount: dexCfgAccount,
+            pool: pool,
+            mint,
+            payer: this.provider.publicKey,
+            systemProgram: SystemProgram.programId,
+        }).instruction());
+
+        return tx;
+    }
+
+    /**
+     * Set configuration
+     * @param params Configuration parameters
+     * @returns Transaction to be signed and related account information
+     */
+    async setCfg(params: Cfg) {
+        const [dexCfgAccount] = web3.PublicKey.findProgramAddressSync(
+            [Buffer.from("CurveConfiguration")],
+            this.program.programId
+        );
+        const [cfg] = web3.PublicKey.findProgramAddressSync(
+            [Buffer.from("TokenCfg"), params.mint.toBuffer() ],
+            this.program.programId
+        );
+
+        const tx = new web3.Transaction();
+        tx.add(await this.program.methods.setCfg({
+            swapAdmin: params.swapAdmin,
+            swapFee: params.swapFee,
+            developer: params.devFeeReceiver,
+        }).accounts({ 
+            dexConfigurationAccount: dexCfgAccount,
+            cfg: cfg,
+            mint: params.mint,
+            admin: this.provider.publicKey,
+            systemProgram: SystemProgram.programId,
+        }).instruction());
+
+        return tx;
+    }
+
+    /**
+     * Set curve configuration
+     * @param params Curve configuration parameters
+     * @returns Transaction to be signed and related account information
+     */
+    async setCurveCfg( {
+        swapFee,
+        swapAdmin,
+        systemFee,
+        mintFees,
+        admin,
+    }: {
+        swapFee: anchor.BN,
+        swapAdmin?: web3.PublicKey,
+        systemFee: anchor.BN,
+        mintFees: anchor.BN,
+        admin: web3.PublicKey,
+    }) {
+        const [dexCfgAccount] = web3.PublicKey.findProgramAddressSync(
             [Buffer.from("CurveConfiguration")],
             this.program.programId
         );
 
-        const [swapAdminCfg] = web3.PublicKey.findProgramAddressSync(
-            [Buffer.from("SwapAdmin"), mint.toBuffer()],
-            this.program.programId
-        );
-
-        const setSwapAdminIx = await this.program.methods.setSwapAdmin(swapAdmin).accounts({
+        const tx = new web3.Transaction();
+        tx.add(await this.program.methods.setCurveCfg({
+            swapFee,
+            swapAdmin: swapAdmin ?? null,
+            systemFee,
+            mintFees,
+            admin,
+        }).accounts({
             dexConfigurationAccount: dexCfgAccount,
             admin: this.provider.publicKey,
-            systemProgram: web3.SystemProgram.programId,
-            swapAdmin: swapAdmin,
-            swapAdminCfg: swapAdminCfg,
-        }).instruction();
+            systemProgram: SystemProgram.programId,
+        }).instruction());
 
-        return setSwapAdminIx;
+        return tx;
     }
 
     /**

@@ -1,6 +1,6 @@
 {
   "name": "@candy-swap/candy-sdk",
-  "version": "3.0.1",
+  "version": "4.0.1",
   "description": "Candy SDK for Solana",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

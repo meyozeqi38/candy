@@ -69,6 +69,11 @@ export type Candy = {
           "name": "tokenAccount",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
         }
       ],
       "args": [
@@ -90,6 +95,11 @@ export type Candy = {
         },
         {
           "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "cfg",
           "isMut": true,
           "isSigner": false
         },
@@ -117,14 +127,15 @@ export type Candy = {
           "isSigner": false
         },
         {
-          "name": "admin",
+          "name": "sysFeeReceiver",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "swapAdminCfg",
+          "name": "devFeeReceiver",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "isOptional": true
         },
         {
           "name": "swapAdmin",
@@ -168,7 +179,7 @@ export type Candy = {
       ]
     },
     {
-      "name": "initialize",
+      "name": "mintInitialize",
       "accounts": [
         {
           "name": "mint",
@@ -181,7 +192,7 @@ export type Candy = {
           "isSigner": false
         },
         {
-          "name": "swapAdminCfg",
+          "name": "cfg",
           "isMut": true,
           "isSigner": false
         },
@@ -191,7 +202,7 @@ export type Candy = {
           "isSigner": true
         },
         {
-          "name": "swapAdmin",
+          "name": "devFeeReciever",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -212,10 +223,33 @@ export type Candy = {
           "isSigner": false
         }
       ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
       "args": [
         {
-          "name": "fee",
-          "type": "u64"
+          "name": "params",
+          "type": {
+            "defined": "InitializeParams"
+          }
         }
       ]
     },
@@ -299,22 +333,7 @@ export type Candy = {
           "isSigner": true
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -322,12 +341,19 @@ export type Candy = {
           "name": "pool",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "active",
-          "type": "bool"
+          "name": "params",
+          "type": {
+            "defined": "ActiveParams"
+          }
         }
       ]
     },
@@ -348,17 +374,24 @@ export type Candy = {
           "name": "dst",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "amt",
-          "type": "u64"
+          "name": "params",
+          "type": {
+            "defined": "WithdrawParams"
+          }
         }
       ]
     },
     {
-      "name": "setSwapAdmin",
+      "name": "setCfg",
       "accounts": [
         {
           "name": "dexConfigurationAccount",
@@ -371,13 +404,12 @@ export type Candy = {
           "isSigner": true
         },
         {
-          "name": "swapAdmin",
+          "name": "mint",
           "isMut": true,
-          "isSigner": false,
-          "isOptional": true
+          "isSigner": false
         },
         {
-          "name": "swapAdminCfg",
+          "name": "cfg",
           "isMut": true,
           "isSigner": false
         },
@@ -394,8 +426,38 @@ export type Candy = {
       ],
       "args": [
         {
-          "name": "swapAdmin",
-          "type": "publicKey"
+          "name": "params",
+          "type": {
+            "defined": "SetCfgParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setCurveCfg",
+      "accounts": [
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SetCurveCfgParams"
+          }
         }
       ]
     }
@@ -407,8 +469,26 @@ export type Candy = {
         "kind": "struct",
         "fields": [
           {
-            "name": "fees",
-            "type": "f64"
+            "name": "mintFees",
+            "type": "u64"
+          },
+          {
+            "name": "sysFeeReceiver",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapDevFee",
+            "type": "u64"
+          },
+          {
+            "name": "swapSystemFee",
+            "type": "u64"
+          },
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
             "name": "admin",
@@ -454,7 +534,7 @@ export type Candy = {
       }
     },
     {
-      "name": "swapAdminCfg",
+      "name": "tokenCfg",
       "type": {
         "kind": "struct",
         "fields": [
@@ -463,12 +543,38 @@ export type Candy = {
             "type": {
               "option": "publicKey"
             }
+          },
+          {
+            "name": "developer",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "devFee",
+            "type": "u64"
+          },
+          {
+            "name": "sysFee",
+            "type": "u64"
           }
         ]
       }
     }
   ],
   "types": [
+    {
+      "name": "ActiveParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "active",
+            "type": "bool"
+          }
+        ]
+      }
+    },
     {
       "name": "InitTokenParams",
       "type": {
@@ -494,6 +600,84 @@ export type Candy = {
       }
     },
     {
+      "name": "InitializeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapFee",
+            "type": "u64"
+          },
+          {
+            "name": "systemFee",
+            "type": "u64"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetCfgParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "swapFee",
+            "type": "u64"
+          },
+          {
+            "name": "developer",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetCurveCfgParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "swapFee",
+            "type": "u64"
+          },
+          {
+            "name": "systemFee",
+            "type": "u64"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "mintFees",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
       "name": "SwapParams",
       "type": {
         "kind": "struct",
@@ -508,6 +692,18 @@ export type Candy = {
           },
           {
             "name": "minOut",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amt",
             "type": "u64"
           }
         ]
@@ -694,31 +890,41 @@ export type Candy = {
     },
     {
       "code": 6008,
+      "name": "InvalidSwapFee",
+      "msg": "Invalid swap fee"
+    },
+    {
+      "code": 6009,
       "name": "FailedToAddLiquidity",
       "msg": "Failed to add liquidity"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "FailedToRemoveLiquidity",
       "msg": "Failed to remove liquidity"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "OverflowOrUnderflowOccurred",
       "msg": "Overflow or underflow occured"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "PriceUnavailable",
       "msg": "Price from Pyth Network is unavailable"
     },
     {
-      "code": 6012,
+      "code": 6013,
       "name": "InvalidAdmin",
       "msg": "Invalid admin account"
     },
     {
-      "code": 6013,
+      "code": 6014,
+      "name": "InvalidDevFeeReceiver",
+      "msg": "Invalid dev fee reciever"
+    },
+    {
+      "code": 6015,
       "name": "InvalidSwapAdmin",
       "msg": "Invalid swap admin account"
     }
@@ -796,6 +1002,11 @@ export const IDL: Candy = {
           "name": "tokenAccount",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
         }
       ],
       "args": [
@@ -817,6 +1028,11 @@ export const IDL: Candy = {
         },
         {
           "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "cfg",
           "isMut": true,
           "isSigner": false
         },
@@ -844,14 +1060,15 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
-          "name": "admin",
+          "name": "sysFeeReceiver",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "swapAdminCfg",
+          "name": "devFeeReceiver",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "isOptional": true
         },
         {
           "name": "swapAdmin",
@@ -895,7 +1112,7 @@ export const IDL: Candy = {
       ]
     },
     {
-      "name": "initialize",
+      "name": "mintInitialize",
       "accounts": [
         {
           "name": "mint",
@@ -908,7 +1125,7 @@ export const IDL: Candy = {
           "isSigner": false
         },
         {
-          "name": "swapAdminCfg",
+          "name": "cfg",
           "isMut": true,
           "isSigner": false
         },
@@ -918,7 +1135,7 @@ export const IDL: Candy = {
           "isSigner": true
         },
         {
-          "name": "swapAdmin",
+          "name": "devFeeReciever",
           "isMut": true,
           "isSigner": false,
           "isOptional": true
@@ -939,10 +1156,33 @@ export const IDL: Candy = {
           "isSigner": false
         }
       ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
       "args": [
         {
-          "name": "fee",
-          "type": "u64"
+          "name": "params",
+          "type": {
+            "defined": "InitializeParams"
+          }
         }
       ]
     },
@@ -1026,22 +1266,7 @@ export const IDL: Candy = {
           "isSigner": true
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -1049,12 +1274,19 @@ export const IDL: Candy = {
           "name": "pool",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "active",
-          "type": "bool"
+          "name": "params",
+          "type": {
+            "defined": "ActiveParams"
+          }
         }
       ]
     },
@@ -1075,17 +1307,24 @@ export const IDL: Candy = {
           "name": "dst",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "amt",
-          "type": "u64"
+          "name": "params",
+          "type": {
+            "defined": "WithdrawParams"
+          }
         }
       ]
     },
     {
-      "name": "setSwapAdmin",
+      "name": "setCfg",
       "accounts": [
         {
           "name": "dexConfigurationAccount",
@@ -1098,13 +1337,12 @@ export const IDL: Candy = {
           "isSigner": true
         },
         {
-          "name": "swapAdmin",
+          "name": "mint",
           "isMut": true,
-          "isSigner": false,
-          "isOptional": true
+          "isSigner": false
         },
         {
-          "name": "swapAdminCfg",
+          "name": "cfg",
           "isMut": true,
           "isSigner": false
         },
@@ -1121,8 +1359,38 @@ export const IDL: Candy = {
       ],
       "args": [
         {
-          "name": "swapAdmin",
-          "type": "publicKey"
+          "name": "params",
+          "type": {
+            "defined": "SetCfgParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setCurveCfg",
+      "accounts": [
+        {
+          "name": "dexConfigurationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SetCurveCfgParams"
+          }
         }
       ]
     }
@@ -1134,8 +1402,26 @@ export const IDL: Candy = {
         "kind": "struct",
         "fields": [
           {
-            "name": "fees",
-            "type": "f64"
+            "name": "mintFees",
+            "type": "u64"
+          },
+          {
+            "name": "sysFeeReceiver",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapDevFee",
+            "type": "u64"
+          },
+          {
+            "name": "swapSystemFee",
+            "type": "u64"
+          },
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
           },
           {
             "name": "admin",
@@ -1181,7 +1467,7 @@ export const IDL: Candy = {
       }
     },
     {
-      "name": "swapAdminCfg",
+      "name": "tokenCfg",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1190,12 +1476,38 @@ export const IDL: Candy = {
             "type": {
               "option": "publicKey"
             }
+          },
+          {
+            "name": "developer",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "devFee",
+            "type": "u64"
+          },
+          {
+            "name": "sysFee",
+            "type": "u64"
           }
         ]
       }
     }
   ],
   "types": [
+    {
+      "name": "ActiveParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "active",
+            "type": "bool"
+          }
+        ]
+      }
+    },
     {
       "name": "InitTokenParams",
       "type": {
@@ -1221,6 +1533,84 @@ export const IDL: Candy = {
       }
     },
     {
+      "name": "InitializeParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": "publicKey"
+          },
+          {
+            "name": "swapFee",
+            "type": "u64"
+          },
+          {
+            "name": "systemFee",
+            "type": "u64"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetCfgParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "swapFee",
+            "type": "u64"
+          },
+          {
+            "name": "developer",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetCurveCfgParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "swapAdmin",
+            "type": {
+              "option": "publicKey"
+            }
+          },
+          {
+            "name": "swapFee",
+            "type": "u64"
+          },
+          {
+            "name": "systemFee",
+            "type": "u64"
+          },
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "mintFees",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
       "name": "SwapParams",
       "type": {
         "kind": "struct",
@@ -1235,6 +1625,18 @@ export const IDL: Candy = {
           },
           {
             "name": "minOut",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amt",
             "type": "u64"
           }
         ]
@@ -1421,31 +1823,41 @@ export const IDL: Candy = {
     },
     {
       "code": 6008,
+      "name": "InvalidSwapFee",
+      "msg": "Invalid swap fee"
+    },
+    {
+      "code": 6009,
       "name": "FailedToAddLiquidity",
       "msg": "Failed to add liquidity"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "FailedToRemoveLiquidity",
       "msg": "Failed to remove liquidity"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "OverflowOrUnderflowOccurred",
       "msg": "Overflow or underflow occured"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "PriceUnavailable",
       "msg": "Price from Pyth Network is unavailable"
     },
     {
-      "code": 6012,
+      "code": 6013,
       "name": "InvalidAdmin",
       "msg": "Invalid admin account"
     },
     {
-      "code": 6013,
+      "code": 6014,
+      "name": "InvalidDevFeeReceiver",
+      "msg": "Invalid dev fee reciever"
+    },
+    {
+      "code": 6015,
       "name": "InvalidSwapAdmin",
       "msg": "Invalid swap admin account"
     }
